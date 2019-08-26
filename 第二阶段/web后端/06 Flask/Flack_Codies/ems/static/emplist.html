@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>emplist</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/addapp/css/style.css" />
+        <script src="/static/loginapp/js/jquery-3.3.1.min.js"></script>
+        <script src="/static/loginapp/js/jquery.cookie.js"></script>
+    </head>
+	<body>
+		<div id="wrap">
+			<div id="top_content"> 
+				<div id="header">
+					<div id="rightheader">
+						<p>
+							2009/11/20
+							<br />
+						</p>
+					</div>
+					<div id="topheader">
+						<h1 id="title">
+							<a href="#">员工信息</a>
+						</h1>
+					</div>
+					<div id="navigation">
+					</div>
+				</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						Welcome!
+					</h1>
+					<table class="table" cellspacing="0" border="1" id="ta1">
+					</table>
+                    <script>
+                        $(function () {
+                            $.ajax({
+                            type:'post',
+                            url:'http://127.0.0.1:8000/addapp/emplist/',
+                            data:'&csrfmiddlewaretoken=' + $.cookie("csrftoken"),
+                            success:function (msg) {
+                                obj=msg['users']
+                                str="<tr class=\"table_header\">\n" +
+                        "            <td>ID</td>\n" +
+                        "            <td>headpic</td>\n" +
+                        "            <td>Name</td>\n" +
+                        "            <td>salary</td>\n" +
+                        "            <td>age</td>\n" +
+                        "            <td>Operation</td>\n" +
+                        "        </tr>"
+                                for(var i=0; i<obj.length;i++){
+                                    user=obj[i]
+                                    str+="<tr  class=\"row2\">"
+                                    str+="<td>"+user['id']+"</td>"
+                                    str+="<td><img src="+user["headpic"]+" width=\"80px\"></td>";
+                                    str+="<td>"+user['name']+"</td>"
+                                    str+="<td>"+user['salary']+"</td>"
+                                    str+="<td>"+user['age']+"</td>"
+                                    str+="<td><a href=\"javascript:void(0);\" onclick=\"delete1("+user.id+")\">delete emp</a>&nbsp;<a href=\"javascript:void(0);\" onclick=\"update1("+user.id+")\">update emp</a></td>"
+                                    str+="</tr>"
+
+                                }
+                                 document.getElementById('ta1').innerHTML=str
+
+                            }
+                        })
+                        })
+
+                        function delete1(id) {
+                            var r = confirm("是否删除");
+                            if (r === true) {
+                                $.ajax({
+                                    type: 'get',
+                                    url: 'http://127.0.0.1:8000/addapp/delete/',
+                                    data: 'id=' + id,
+                                    success: function (msg) {
+                                        if (msg === 'ok') {
+                                            location.href = 'http://127.0.0.1:8000/static/emplist.html'
+                                        } else {
+                                            alert('删除失败')
+                                        }
+
+                                    }
+                                })
+                            }
+                        }
+                        function update1(id) {
+                                $.ajax({
+                                    type: 'get',
+                                    url: 'http://127.0.0.1:8000/addapp/update/',
+                                    data: 'id=' + id,
+                                    success: function (msg) {
+                                        if(msg==='ok'){
+                                            location.href = 'http://127.0.0.1:8000/static/updateEmp.html'
+                                        }else if(msg==='error'){
+                                            alert('请重新选择')
+                                        }
+
+                                    }
+                                })
+                        }
+                    </script>
+
+					<p>
+                        <input type="button" class="button" value="Add Employee" onclick="location='http://127.0.0.1:8000/static/addemp.html'"/>
+                    </p>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				ABC@126.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

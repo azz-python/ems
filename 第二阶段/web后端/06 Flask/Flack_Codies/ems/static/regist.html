@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>注册页面</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/loginapp/css/style.css" />
+        <script src="/static/loginapp/js/jquery-3.3.1.min.js"></script>
+        <script src="/static/loginapp/js/jquery.cookie.js"></script>
+        <script>
+            var flag1=false
+            function regist() {
+                if(flag1===true && flag1===true && flag1===true){
+                    $.ajax({
+                        type:'post',
+                        url:'http://127.0.0.1:8000/loginapp/registlogic/',
+                        data:$("#from2").serialize()+'&csrfmiddlewaretoken=' + $.cookie("csrftoken"),
+                        success:function (data) {
+                            if (data==='ok'){
+                                location.href="http://127.0.0.1:8000/static/login.html"
+                            }else if(data==='error'){
+                                alert('注册失败')
+                            }
+
+                        }
+                    })
+
+                }else{
+                    alert('请完善信息')
+                }
+            }
+            function checkName() {
+                $("#mag1").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/5-121204194025.gif\" width=20px>')
+                uname=$("#username").val()
+                $.ajax({
+                    type: 'post',
+                    url:"http://127.0.0.1:8000/loginapp/checkname/",
+                    data:'uname='+uname+'&csrfmiddlewaretoken=' + $.cookie("csrftoken"),
+                    success:function (data) {
+                        $("#mag1").text(data)
+                        if (data==='ok'){
+                            flag1=true
+                            $("#mag1").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/timg.jpg" width=20px>')
+                        }else{
+                            flag1=false
+                            $("#mag1").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/20200000013920144735683904067_s.jpg\" width=20px>')
+                        }
+                        }
+
+                })
+            }
+            function checkPwd1() {
+                upwd1=$("userpwd1").val()
+
+
+            }
+            function checkPwd2() {
+                $("#pwd").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/5-121204194025.gif\" width=20px>')
+                upwd1=$("#userpwd1").val()
+                upwd=$("#userpwd").val()
+                if (upwd1===upwd){
+                    flag1=true
+                    $("#pwd").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/timg.jpg" width=20px>')
+                }else{
+                    flag1=false
+                    $("#pwd").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/20200000013920144735683904067_s.jpg\" width=20px>')
+                }
+
+            }
+            function checkCapt() {
+                $("#codes1").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/5-121204194025.gif\" width=20px>')
+                ucaptcha=$("#captcha1").val();
+                $.ajax({
+                    type: 'post',
+                    url:'http://127.0.0.1:8000/loginapp/changecode/',
+                    data:'ucaptcha='+ucaptcha+'&csrfmiddlewaretoken=' + $.cookie("csrftoken"),
+                    success:function (data) {
+                        if (data==='ok'){
+                            flag1=true
+                            $("#codes1").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/timg.jpg" width=20px>')
+                        }else{
+                            flag1=false
+                            $("#codes1").html('<img src="http://127.0.0.1:8000/static/loginapp/imges/20200000013920144735683904067_s.jpg\" width=20px>')
+                        }
+                        }
+
+                })
+            }
+        </script>
+    </head>
+	<body>
+		<div id="wrap">
+			<div id="top_content">
+					<div id="header">
+						<div id="rightheader">
+							<p>
+								2009/11/20
+								<br />
+							</p>
+						</div>
+						<div id="topheader">
+							<h1 id="title">
+								<a href="#">注册</a>
+							</h1>
+						</div>
+						<div id="navigation">
+						</div>
+					</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<form action="" method="post" enctype="multipart/form-data" id="from2">
+						<table cellpadding="0" cellspacing="0" border="0"
+							class="form_table">
+							<tr>
+								<td valign="middle" align="right">
+									用户名:
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" id="username" class="inputgri" name="name" onblur="checkName()"/>
+                                    <span style="" id="mag1"></span>
+
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									密码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="password" id="userpwd1" class="inputgri" name="pwd1" onblur="checkPwd1()"/>
+								</td>
+							</tr>
+                            <tr>
+								<td valign="middle" align="right">
+									确认密码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="password" id="userpwd" class="inputgri" name="pwd2" onblur="checkPwd2()" />
+                                    <span style="" id="pwd"></span>
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									性别:
+								</td>
+								<td valign="middle" align="left">
+									男
+									<input type="radio" class="inputgri" name="sex" value="1" checked="checked"/>
+									女
+									<input type="radio" class="inputgri" name="sex" value="0"/>
+								</td>
+							</tr>
+							
+							<tr>
+								<td valign="middle" align="right">
+									验证码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" id="captcha1" name="captcha" onblur="checkCapt()">
+                                    <img src="http://127.0.0.1:8000/loginapp/captcha/" width="70" id="captcha" onclick="changeCode()">
+                                    <script>
+                                    function changeCode() {
+                                            url="http://127.0.0.1:8000/loginapp/captcha/?"+new Date().getTime();
+                                            img=document.getElementById("captcha");
+                                            img.src=url
+                                            }
+                                    </script>
+                                    <span id="codes1" style="color: red"></span>
+								</td>
+
+							</tr>
+						</table>
+						<p>
+							<input type="button" class="button" value="Submit &raquo;" onclick="regist()"/>
+						</p>
+					</form>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				ABC@126.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
